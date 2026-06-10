@@ -794,6 +794,11 @@ new Phaser.Game({
   },
   scene: PortoScene,
 });
+
+/* Force reload so the game reinitialises after coming from browser back button. */
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) window.location.reload();
+});
 </script>
 </body>
 </html>
