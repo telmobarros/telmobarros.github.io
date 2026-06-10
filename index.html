@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telmo Barros - AI &amp; Optimization</title>
+  <link rel="icon" type="image/x-icon"  href="assets/favicon/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+  <link rel="manifest" href="assets/favicon/site.webmanifest">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#0d1a0a; overflow:hidden; }
+    canvas { display:block; image-rendering:pixelated; }
+
+    #hud {
+      position:fixed; top:0; left:0; right:0;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:0.5rem 1.1rem;
+      background:rgba(10,8,4,0.82);
+      border-bottom:2px solid #6a3810;
+      font-family:'Space Mono',monospace;
+      z-index:20; pointer-events:none;
+    }
+    #hud .title { color:#f07848; font-size:0.82rem; font-weight:700; letter-spacing:0.1em; }
+    @media (max-width:767px) {
+      #hud .title { display:flex; flex-direction:column; gap:0.05rem; }
+      #hud .title-sub { font-size:0.73rem; font-weight:400; letter-spacing:0.06em; opacity:0.72; }
+      #hud .title-dash { display:none; }
+    }
+    #hint {
+      position:fixed; bottom:1rem; left:1rem;
+      background:rgba(10,8,4,0.82);
+      border:1px solid #6a3810;
+      border-radius:4px;
+      padding:0.4rem 0.7rem;
+      font-family:'Space Mono',monospace; font-size:0.6rem;
+      color:rgba(220,200,170,0.38);
+      line-height:2.1;
+      z-index:20; pointer-events:none;
+    }
+    #resume-btn {
+      pointer-events:all;
+      font-family:'Space Mono',monospace; font-size:0.8rem;
+      color: #f07848; border:1px solid #f07848;
+      background:rgba(10,8,4,0.6);
+      padding:0.38em 1.05em; border-radius:3px;
+      text-decoration:none;
+      transition:background 0.15s, color 0.15s;
+    }
+    #resume-btn:hover { background:#f07848; color:#fff; }
+
+    /* Debug coords overlay — toggle with G key */
+    #debug {
+      display:none;
+      position:fixed; bottom:5rem; left:1rem;
+      font-family:'Space Mono',monospace; font-size:0.7rem;
+      color:#00ff44; background:rgba(0,0,0,0.7);
+      padding:0.3em 0.6em; border-radius:3px;
+      z-index:30; pointer-events:none;
+    }
+
+    /* Intro dialog — DOM element for crisp font rendering */
+    #intro-dialog {
+      position:fixed;
+      z-index:500;
+      width:min(360px, calc(100vw - 24px));
+      background:rgba(10,18,8,0.96);
+      border:2px solid #f07848;
+      border-radius:4px;
+      padding:10px 14px 18px 12px;
+      box-shadow:inset 0 0 0 1px rgba(106,56,16,0.35), 0 4px 20px rgba(0,0,0,0.5);
+      font-family:'Space Mono',monospace;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      opacity:0;
+      transition:opacity 0.3s ease;
+    }
+    #intro-dialog.id-visible { opacity:1; }
+    #intro-dialog .id-divider {
+      width:1px; align-self:stretch;
+      background:rgba(106,56,16,0.6);
+      margin:0 2px; flex-shrink:0;
+    }
+    #intro-dialog .id-body {
+      display:flex; flex-direction:column; gap:3px; flex:1; min-width:0;
+    }
+    #intro-dialog .id-name  { color:#f07848; font-size:11px; font-weight:700; line-height:1.3; }
+    #intro-dialog .id-sub   { color:#f4ead8; font-size:9.5px; line-height:1.5; }
+    #intro-dialog .id-tip   { color:#c8b898; font-size:9px; line-height:1.5; }
+    #intro-dialog .id-hint  {
+      position:absolute; bottom:5px; right:8px;
+      font-size:8px; color:rgba(220,195,155,0.85);
+      transition:opacity 0.6s ease;
+    }
+    @media (max-width:767px) {
+      #intro-dialog .id-name { font-size:12px; }
+      #intro-dialog .id-sub  { font-size:10px; }
+      #intro-dialog .id-tip  { font-size:10px; }
+    }
+
+    /* Social links bar — bottom-right */
+    #social-bar {
+      position:fixed; bottom:1rem; right:1rem;
+      display:flex; gap:0.4rem; align-items:center;
+      background:rgba(10,8,4,0.82);
+      border:1px solid #6a3810;
+      border-radius:4px;
+      padding:0.5rem 0.65rem;
+      z-index:20;
+    }
+    #social-bar a {
+      display:flex; align-items:center; justify-content:center;
+      width:36px; height:36px;
+      color:rgba(220,195,155,0.55);
+      border-radius:3px;
+      transition:color 0.15s, background 0.15s;
+      text-decoration:none;
+    }
+    #social-bar a:hover {
+      color:#f07848;
+      background:rgba(240,120,72,0.12);
+    }
+
+    /* Spotlight overlay — dims everything outside the player circle */
+    #spotlight {
+      position:fixed; inset:0;
+      z-index:15;          /* above canvas, below HUD (20) and dialog (500) */
+      pointer-events:none;
+      background:rgba(0,0,0,0.72);
+      opacity:0;
+      transition:opacity 0.6s ease;
+    }
+    #spotlight.sp-on  { opacity:1; }
+  </style>
+</head>
+<body>
+
+<div id="hud">
+  <span class="title">▶ Telmo Barros <span class="title-sub"><span class="title-dash">— </span>AI &amp; Optimization</span></span>
+  <a href="home.html" id="resume-btn">📄 Resume</a>
+</div>
+<div id="debug"></div>
+<div id="hint"></div>
+
+<nav id="social-bar" aria-label="Social links">
+  <a href="https://github.com/telmobarros" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483
+               0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466
+               -.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832
+               .092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688
+               -.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844a9.59 9.59 0
+               012.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595
+               1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012
+               2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+    </svg>
+  </a>
+  <a href="https://www.linkedin.com/in/telmobarros" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136
+               2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37
+               4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063
+               2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0
+               23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+    </svg>
+  </a>
+  <a href="https://scholar.google.com/citations?user=telmobarros" target="_blank" rel="noopener" title="Google Scholar" aria-label="Google Scholar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+    </svg>
+  </a>
+  <a href="mailto:telmo.20@gmail.com" title="Email" aria-label="Email">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0
+               4l-8 5-8-5V6l8 5 8-5v2z"/>
+    </svg>
+  </a>
+</nav>
+
+<div id="game-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+<script>
+'use strict';
+/* ================================================================
+   PORTO MAP — Layer-based approach
+   -------------------------------------------------------------
+   Layer stack (bottom to top):
+     1. bg.png    — full background scene
+     2. player    — character sprite (depth 50)
+     3. top.png   — overhanging rooftops / above-player elements
+                    (depth 100, renders ON TOP of character)
+
+   Collision:
+     pathway.png  — pixel-colour map loaded onto an offscreen canvas.
+                    Green pixel (#00ff00-ish) = walkable.
+                    Anything else = blocked.
+                    We sample one pixel per frame at the player's feet.
+
+   Door zones:
+     Defined below as {x, y, r} circles (world coordinates).
+     Walk into the circle → "Press E" prompt appears.
+     Press E → fade to home.html#section.
+
+   ================================================================ */
+
+/* -- ASSET PATHS ----------------------------------------------- */
+const ASSETS = {
+  bg:      'assets/map/bg.png',
+  pathway: 'assets/map/pathway.png',
+  top:     'assets/map/top.png',
+};
+
+/* -- PLAYER SPEED (world px / s) ------------------------------- */
+const SPD = 180;
+
+/* -- AUTO-ENTER RADIUS (world px) — walk this close and you're in -- */
+const AUTO_R = 14;
+
+/* -- PLAYER START (world px) ---------------------------------- */
+// Adjust if the player starts on a non-walkable pixel.
+const START = { x: 1048, y: 648 };
+
+/* -- DOOR ZONES --------------------------------------------------
+   x, y = bottom-centre of the building rectangle (world pixels)
+   w, h = width and height of the clickable rectangle
+   The rectangle spans:
+     left   = x - w/2
+     right  = x + w/2
+     bottom = y
+     top    = y - h
+   -------------------------------------------------------------- */
+const DOORS = [
+  { label:'EDUCATION',    section:'education',    x:1200, y:587, r:45, w:180, h:160 },
+  { label:'EXPERIENCE',   section:'experience',   x: 915, y:596, r:45, w:180, h:160 },
+  { label:'PUBLICATIONS', section:'publications', x: 905, y:832, r:45, w:180, h:160 },
+  { label:'PROJECTS',     section:'projects',     x:1210, y:832, r:45, w:180, h:160 },
+];
+
+/* click hit-test: rectangle with x,y at bottom-centre */
+function inRect(door, wx, wy) {
+  return wx >= door.x - door.w / 2 &&
+         wx <= door.x + door.w / 2 &&
+         wy >= door.y - door.h &&
+         wy <= door.y;
+}
+
+/* walk-up proximity: circle around x,y */
+function inRadius(door, wx, wy) {
+  const dx = wx - door.x, dy = wy - door.y;
+  return dx*dx + dy*dy < door.r * door.r;
+}
+
+/* ================================================================
+   SCENE
+   ================================================================ */
+class PortoScene extends Phaser.Scene {
+  constructor() { super('Porto'); }
+
+  /* -- preload ----------------------------------------------- */
+  preload() {
+    this.load.image('bg',      ASSETS.bg);
+    this.load.image('pathway', ASSETS.pathway);
+    this.load.image('top',     ASSETS.top);
+
+    /* tiny 1px white texture for the player if needed */
+    const g = this.make.graphics({ x:0, y:0, add:false });
+    g.fillStyle(0xffffff, 1); g.fillRect(0,0,1,1);
+    g.generateTexture('px', 1, 1); g.destroy();
+
+    /* build player walk-frame textures */
+    this._makePlayerFrames();
+  }
+
+  /* -- create ------------------------------------------------ */
+  create() {
+    /* world size = background image natural dimensions */
+    const bg = this.textures.get('bg').getSourceImage();
+    this.worldW = bg.width;
+    this.worldH = bg.height;
+
+    /* -- Layer 1: Background -- */
+    this.add.image(this.worldW/2, this.worldH/2, 'bg')
+      .setDepth(0)
+      .setDisplaySize(this.worldW, this.worldH);
+
+    /* -- Pathway → offscreen canvas for pixel sampling -- */
+    this._buildPathCanvas();
+
+    /* -- Layer 2: Player -- */
+    this.px = START.x;
+    this.py = START.y;
+    this._dir  = 'd';
+    this._frame = 0;
+    this._ftick = 0;
+
+    this.playerSprite = this.add.image(this.px, this.py, 'p_d0')
+      .setDepth(50)
+      .setOrigin(0.5, 0.78)   /* anchor at feet (31.2/40 after 4px padding) */
+      .setScale(1.15);
+
+    /* -- Layer 3: Top (rooftops above player) -- */
+    this.add.image(this.worldW/2, this.worldH/2, 'top')
+      .setDepth(100)
+      .setDisplaySize(this.worldW, this.worldH);
+
+    /* -- Door zone circles (visual debug only in dev) -- */
+    /* Uncomment this block to see door zones while tuning:
+    const dg = this.add.graphics().setDepth(200);
+    dg.lineStyle(2, 0x00ff00, 0.5);
+    DOORS.forEach(d => dg.strokeCircle(d.x, d.y, d.r));
+    */
+
+    /* -- "Press E" prompt -- */
+    this.prompt = this.add.text(0, 0, '', {
+      fontFamily:"'Space Mono',monospace", fontSize:'12px',
+      color:'#f4ead8', backgroundColor:'#000000aa',
+      padding:{ x:8, y:5 },
+    }).setOrigin(0.5, 1).setDepth(150).setVisible(false);
+
+    /* -- Camera -- */
+    this.cameras.main
+      .setBounds(0, 0, this.worldW, this.worldH)
+      .startFollow(this.playerSprite, true, 0.1, 0.1);
+
+    this._updateZoom();
+
+    /* recalculate zoom whenever the window / canvas is resized */
+    this.scale.on('resize', () => this._updateZoom());
+
+    /* -- Input -- */
+    this.keys = this.input.keyboard.addKeys('UP,DOWN,LEFT,RIGHT,W,A,S,D,E');
+    this.input.addPointer(2);   /* ensure touch events register on mobile */
+
+    /* -- Debug overlay -- */
+    this._debug = false;
+    this._dbgEl = document.getElementById('debug');
+    this.input.keyboard.on('keydown-G', () => {
+      this._debug = !this._debug;
+      this._dbgEl.style.display = this._debug ? 'block' : 'none';
+    });
+
+    this.near    = null;
+    this._target = null;   /* {x,y} world coords the player is walking toward */
+    this._fading = false;  /* true once a door transition has started */
+    this._introShowing = true;   /* freeze movement until intro is dismissed */
+
+    /* show intro after a short delay so the scene has painted */
+    this.time.delayedCall(400, () => this._showIntro());
+
+    /* -- Pointer: move character + click buildings -- */
+
+    /* pointerdown / touchstart: begin walking toward tap/click position */
+    this.input.on('pointerdown', (pointer) => {
+      /* record where the press started to detect drag vs click later */
+      this._pressX = pointer.x;
+      this._pressY = pointer.y;
+      const [wx, wy] = this._toWorld(pointer);
+      /* if tapped directly on a building, let pointerup handle navigation */
+      if (!DOORS.some(d => inRect(d, wx, wy))) {
+        this._target = { x: wx, y: wy };
+      }
+    });
+
+    /* pointermove: follow finger/cursor continuously while held */
+    this.input.on('pointermove', (pointer) => {
+      const [wx, wy] = this._toWorld(pointer);
+
+      if (pointer.isDown && !DOORS.some(d => inRect(d, wx, wy))) {
+        this._target = { x: wx, y: wy };
+      }
+
+      /* cursor style */
+      const overDoor = DOORS.some(d => inRect(d, wx, wy));
+      this.game.canvas.style.cursor = overDoor ? 'pointer' : 'default';
+    });
+
+    /* pointerup: only navigate if this was a short click, not a drag */
+    this.input.on('pointerup', (pointer) => {
+      const dragDist = Math.hypot(pointer.x - this._pressX, pointer.y - this._pressY);
+      if (dragDist > 12) return;   /* was a drag — ignore building check */
+
+      const [wx, wy] = this._toWorld(pointer);
+      for (const door of DOORS) {
+        if (inRect(door, wx, wy)) {
+          this._target = null;
+          this._enterDoor(door);
+          return;
+        }
+      }
+    });
+  }
+
+  /* -- update ------------------------------------------------ */
+  update(_, dt) {
+    const K = this.keys;
+    const L = K.LEFT.isDown  || K.A.isDown;
+    const R = K.RIGHT.isDown || K.D.isDown;
+    const U = K.UP.isDown    || K.W.isDown;
+    const D = K.DOWN.isDown  || K.S.isDown;
+
+    /* freeze movement while intro dialog is open */
+    if (this._introShowing) return;
+
+    /* keyboard velocity */
+    let vx = (R ? SPD : 0) - (L ? SPD : 0);
+    let vy = (D ? SPD : 0) - (U ? SPD : 0);
+    if (vx && vy) { vx *= 0.707; vy *= 0.707; }
+
+    /* keyboard cancels mouse target */
+    if (L || R || U || D) this._target = null;
+
+    /* mouse / touch target movement */
+    if (this._target) {
+      const tdx = this._target.x - this.px;
+      const tdy = this._target.y - this.py;
+      const dist = Math.sqrt(tdx * tdx + tdy * tdy);
+      if (dist < 4) {
+        this._target = null;   /* reached destination */
+      } else {
+        vx = (tdx / dist) * SPD;
+        vy = (tdy / dist) * SPD;
+      }
+    }
+
+    /* direction label — from whichever input is active */
+    if      (Math.abs(vx) >= Math.abs(vy) && vx < 0) this._dir = 'l';
+    else if (Math.abs(vx) >= Math.abs(vy) && vx > 0) this._dir = 'r';
+    else if (vy < 0) this._dir = 'u';
+    else if (vy > 0) this._dir = 'd';
+
+    /* walk animation tick */
+    const moving = vx !== 0 || vy !== 0;
+    if (moving) {
+      this._ftick += dt;
+      if (this._ftick > 160) { this._frame=(this._frame+1)%3; this._ftick=0; }
+    } else { this._frame=0; this._ftick=0; }
+
+    this.playerSprite.setTexture(`p_${this._dir}${this._frame}`);
+
+    /* pixel-collision movement */
+    if (moving) this._move(vx * dt/1000, vy * dt/1000);
+
+    /* door proximity check — circle around door x,y (E key trigger) */
+    this.near = null;
+    for (const door of DOORS) {
+      if (inRadius(door, this.px, this.py)) { this.near = door; break; }
+    }
+
+    if (this.near) {
+      this.prompt
+        .setPosition(this.px, this.py - 30)
+        .setText(`[ E ]  ${this.near.label}`)
+        .setVisible(true);
+    } else {
+      this.prompt.setVisible(false);
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(K.E) && this.near) {
+      this._enterDoor(this.near);
+    }
+
+    /* auto-enter: step inside the tiny threshold and navigate immediately */
+    if (!this._fading) {
+      for (const door of DOORS) {
+        const dx = this.px - door.x, dy = this.py - door.y;
+        if (dx*dx + dy*dy < AUTO_R * AUTO_R) { this._enterDoor(door); break; }
+      }
+    }
+
+    /* debug overlay */
+    if (this._debug) {
+      this._dbgEl.textContent =
+        `x:${Math.round(this.px)}  y:${Math.round(this.py)}` +
+        (this.near ? `  near:${this.near.label}` : '');
+    }
+  }
+
+  _enterDoor(door) {
+    if (this._fading) return;
+    this._fading = true;
+    this._target = null;
+    this.cameras.main.fadeOut(300, 0, 0, 0);
+    this.cameras.main.once('camerafadeoutcomplete', () => {
+      window.location.href = `home.html#${door.section}`;
+    });
+  }
+
+  /* -- Intro dialog (Pokémon-style, bottom of screen) ----------- */
+  _showIntro() {
+    const cam  = this.cameras.main;
+    const zoom = cam.zoom;
+    const sh   = this.scale.height;
+
+    const sw = this.scale.width;
+
+    /* compute where the camera will settle once it fully follows START */
+    const idealScrollX = Math.max(0,
+      Math.min(START.x - sw / (zoom * 2), this.worldW - sw / zoom)
+    );
+    const idealScrollY = Math.max(0,
+      Math.min(START.y - sh / (zoom * 2), this.worldH - sh / zoom)
+    );
+
+    /* player screen position based on START */
+    const playerScreenX = (START.x - idealScrollX) * zoom;
+
+    /* sprite origin (0.5, 0.85) on a 32px sprite → feet 4.8px below START.y */
+    const feetWorldY  = START.y + (1 - 0.85) * 32;
+    const feetScreenY = (feetWorldY - idealScrollY) * zoom;
+    const dialogTop   = Math.min(feetScreenY + 14, window.innerHeight - 130);
+
+    const dialogW = Math.min(360, window.innerWidth - 24);
+    const dialogLeft = Math.max(12, Math.min(playerScreenX - dialogW / 2, window.innerWidth - dialogW - 12));
+
+    /* -- Spotlight overlay -- */
+    /* circle centred on the character body (sprite origin is at feet, so shift up) */
+    const spCX = playerScreenX;
+    const spCY = (START.y - idealScrollY) * zoom - 0.35 * 32 * zoom;
+    const r1   = Math.round(Math.min(210, window.innerWidth * 0.36)); /* transparent inner */
+    const r2   = Math.round(r1 * 1.38);                               /* dark outer */
+    const mask = `radial-gradient(circle at ${spCX}px ${spCY}px, transparent ${r1}px, rgba(0,0,0,0.92) ${r2}px)`;
+    const spot = document.createElement('div');
+    spot.id = 'spotlight';
+    spot.style.webkitMaskImage = mask;
+    spot.style.maskImage = mask;
+    document.body.appendChild(spot);
+    requestAnimationFrame(() => spot.classList.add('sp-on'));
+
+    const ptSize = window.innerWidth < 768 ? 44 : 36;
+
+    /* -- Build DOM element (crisp text, easy positioning) -- */
+    const box = document.createElement('div');
+    box.id = 'intro-dialog';
+    box.style.top  = dialogTop + 'px';
+    box.style.left = dialogLeft + 'px';
+    box.innerHTML = `
+      <canvas id="id-portrait" width="${ptSize}" height="${ptSize}"
+        style="image-rendering:pixelated;flex-shrink:0;width:${ptSize}px;height:${ptSize}px"></canvas>
+      <div class="id-divider"></div>
+      <div class="id-body">
+        <span class="id-name">Hi! I'm Telmo Barros.</span>
+        <span class="id-sub">PhD researcher in AI &amp; Optimisation<br>at the University of Porto.</span>
+        <span class="id-tip">This is my hometown — explore the<br>buildings to learn more about me.</span>
+      </div>
+      <span class="id-hint">press any key or tap</span>
+    `;
+    document.body.appendChild(box);
+
+    /* draw player sprite into the portrait canvas */
+    const ptCanvas = document.getElementById('id-portrait');
+    const texSrc   = this.textures.get('p_d0').getSourceImage();
+    if (ptCanvas && texSrc) {
+      const pctx = ptCanvas.getContext('2d');
+      pctx.imageSmoothingEnabled = false;
+      pctx.drawImage(texSrc, 0, 0, ptSize, ptSize);
+    }
+
+    /* blink the hint text */
+    let hintOn = true;
+    const hintEl = box.querySelector('.id-hint');
+    const blinkTimer = setInterval(() => {
+      if (!hintEl) return;
+      hintOn = !hintOn;
+      hintEl.style.opacity = hintOn ? '1' : '0.15';
+    }, 900);
+
+    /* fade in */
+    requestAnimationFrame(() => box.classList.add('id-visible'));
+
+    /* wave animation: w0→w1→w2→w1→w0, then idle, repeats every 5s */
+    const waveSeq = ['p_w0','p_w1','p_w2','p_w1','p_w0'];
+    const doWave = () => {
+      if (!this._introShowing) return;
+      let i = 0;
+      const step = () => {
+        if (!this._introShowing || i >= waveSeq.length) {
+          this.playerSprite.setTexture('p_d0');
+          return;
+        }
+        this.playerSprite.setTexture(waveSeq[i++]);
+        this.time.delayedCall(220, step);
+      };
+      step();
+    };
+    this.time.delayedCall(300, doWave);
+    const waveRepeat = this.time.addEvent({ delay: 5000, callback: doWave, loop: true });
+
+    const dismiss = () => {
+      clearInterval(blinkTimer);
+      waveRepeat.remove();
+      this.playerSprite.setTexture('p_d0');
+      box.classList.remove('id-visible');
+      spot.classList.remove('sp-on');
+      setTimeout(() => {
+        if (box.parentNode)  box.remove();
+        if (spot.parentNode) spot.remove();
+      }, 600);
+      document.removeEventListener('keydown', dismiss);
+      document.removeEventListener('pointerdown', onPointer);
+      document.removeEventListener('pointermove', onDrag);
+      this._introShowing = false;
+    };
+    /* dismiss on click outside the box */
+    const onPointer = (e) => { if (!box.contains(e.target)) dismiss(); };
+    /* dismiss on drag (any pointer movement while a button is held) */
+    const onDrag = (e) => { if (e.buttons > 0) dismiss(); };
+
+    this.time.delayedCall(600, () => {
+      document.addEventListener('keydown', dismiss);
+      document.addEventListener('pointerdown', onPointer);
+      document.addEventListener('pointermove', onDrag);
+    });
+  }
+
+  /* recalculate camera zoom based on current screen size */
+  _updateZoom() {
+    const isMobile = this.sys.game.device.input.touch || window.innerWidth < 768;
+    const hint = document.getElementById('hint');
+
+    if (isMobile) {
+      const pad  = 120;
+      const xs   = DOORS.map(d => d.x);
+      const ys   = DOORS.map(d => d.y);
+      const areaW = (Math.max(...xs) + pad) - (Math.min(...xs) - pad);
+      const areaH = (Math.max(...ys) + pad) - (Math.min(...ys) - pad);
+      const zoom  = Math.min(
+        this.scale.width        / areaW,
+        (this.scale.height - 44) / areaH
+      );
+      this.cameras.main.setZoom(zoom);
+      hint.innerHTML = 'tap to move<br>tap a building to enter';
+    } else {
+      this.cameras.main.setZoom(1.4);
+      hint.innerHTML = 'WASD/arrows/mouse to move<br>E/click to enter';
+    }
+  }
+
+  /* convert Phaser pointer screen coords → world coords */
+  _toWorld(pointer) {
+    const cam = this.cameras.main;
+    const wx = (pointer.x - cam.width  / 2) / cam.zoom + cam.scrollX + cam.width  / 2;
+    const wy = (pointer.y - cam.height / 2) / cam.zoom + cam.scrollY + cam.height / 2;
+    return [wx, wy];
+  }
+
+  /* ================================================================
+     MOVEMENT WITH PIXEL COLLISION
+     ================================================================ */
+  _move(dx, dy) {
+    /* dx/dy already = velocity * dt (pixels to move this frame) */
+    const nextX = this.px + dx;
+    const nextY = this.py + dy;
+
+    /* sample walkability at three foot-level points for smoother slides */
+    const feetY = 6; /* pixels below centre to sample (foot level) */
+
+    if (this._walkable(nextX, nextY + feetY)) {
+      /* full move */
+      this.px = Phaser.Math.Clamp(nextX, 0, this.worldW);
+      this.py = Phaser.Math.Clamp(nextY, 0, this.worldH);
+    } else if (dx !== 0 && this._walkable(nextX, this.py + feetY)) {
+      /* slide horizontally */
+      this.px = Phaser.Math.Clamp(nextX, 0, this.worldW);
+    } else if (dy !== 0 && this._walkable(this.px, nextY + feetY)) {
+      /* slide vertically */
+      this.py = Phaser.Math.Clamp(nextY, 0, this.worldH);
+    }
+
+    this.playerSprite.setPosition(this.px, this.py);
+  }
+
+  /* -- Sample pathway canvas: returns true if pixel is green-ish -- */
+  _walkable(wx, wy) {
+    const x = Math.round(wx);
+    const y = Math.round(wy);
+    if (x < 0 || y < 0 || x >= this.worldW || y >= this.worldH) return false;
+    try {
+      const d = this._pathCtx.getImageData(x, y, 1, 1).data;
+      /* green channel dominant, reasonably saturated */
+      return d[1] > 150 && d[0] < 120 && d[2] < 120 && d[3] > 128;
+    } catch(_) { return false; }
+  }
+
+  /* -- Draw pathway.png onto an offscreen canvas (same size as world) -- */
+  _buildPathCanvas() {
+    const pathImg = this.textures.get('pathway').getSourceImage();
+    const c = document.createElement('canvas');
+    c.width  = this.worldW;
+    c.height = this.worldH;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(pathImg, 0, 0, this.worldW, this.worldH);
+    this._pathCtx = ctx;
+  }
+
+  /* ================================================================
+     PLAYER SPRITE FRAMES
+     4 directions × 3 walk frames — drawn on HTMLCanvas elements,
+     then registered as Phaser textures.
+     Each frame is 40×40 px (4px padding around 32px art for glow bleed).
+     ================================================================ */
+  _makePlayerFrames() {
+    ['d','u','l','r','w'].forEach(dir => {
+      for (let f=0; f<3; f++) {
+        const c = document.createElement('canvas');
+        c.width = 40; c.height = 40;
+        this._drawFrame(c.getContext('2d'), dir, f);
+        this.textures.addCanvas(`p_${dir}${f}`, c);
+      }
+    });
+  }
+
+  _drawFrame(ctx, dir, frame) {
+    /* all sizes in "pixel-art pixels" (2px each); +4px offset centres the
+       32px art inside the 40px canvas so the glow isn't clipped at edges */
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.88)';
+    ctx.shadowBlur  = 4;
+    const px = (x,y,w,h,col) => {
+      ctx.fillStyle = col;
+      ctx.fillRect(x*2 + 4, y*2 + 4, (w??1)*2, (h??1)*2);
+    };
+
+    /* foot shadow */
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(9, 32, 22, 4);
+
+    /* shirt (Porto blue) */
+    px(4, 8,  8, 7, '#1a5276');
+
+    /* arms — wave dir overrides right arm into raised position */
+    if (dir === 'w') {
+      px(2, 8, 2, 5, '#1a5276');           /* left arm static */
+      px(2, 13, 2, 2, '#e8b888');
+      /* right arm: 3 wave positions — side, mid-raise, high-raise */
+      const wa = [[12,8,12,13],[13,5,14,3],[13,2,14,1]][frame];
+      px(wa[0], wa[1], 2, 4, '#1a5276');
+      px(wa[2], wa[3], 2, 2, '#e8b888');
+    } else {
+      const swing = frame===1 ? -1 : frame===2 ? 1 : 0;
+      px(2, 8+swing, 2, 5, '#1a5276');
+      px(12,8-swing, 2, 5, '#1a5276');
+      px(2, 13+swing,2, 2, '#e8b888');
+      px(12,13-swing,2, 2, '#e8b888');
+    }
+
+    /* legs + feet — static during wave */
+    const lstep = (dir!=='w' && frame===1) ? -1 : (dir!=='w' && frame===2) ? 1 : 0;
+    px(5, 15-lstep, 3, 3, '#2c2416');
+    px(8, 15+lstep, 3, 3, '#2c2416');
+    px(4, 18-lstep, 4, 2, '#5a4030');
+    px(8, 18+lstep, 4, 2, '#5a4030');
+
+    /* head — no shadow so face details stay clean */
+    ctx.shadowBlur = 0;
+    if (dir === 'u') {
+      px(4,2,8,6,'#2a1808');             /* back of head */
+    } else {
+      px(4,2,8,6,'#e8b888');             /* face */
+      px(3,1,10,3,'#2a1808');            /* hair top */
+      px(3,3, 1,3,'#2a1808');            /* hair left */
+      px(12,3, 1,3,'#2a1808');           /* hair right */
+      /* eyes per direction */
+      if (dir==='d' || dir==='w') {
+        px(5,5,2,2,'#111'); px(9,5,2,2,'#111');
+        px(6,7,4,1,'#b07060');           /* mouth */
+      } else if (dir==='l') {
+        px(4,5,2,2,'#111');
+      } else {
+        px(10,5,2,2,'#111');
+      }
+    }
+
+  }
+}
+
+/* ================================================================
+   PHASER CONFIG
+   ================================================================ */
+new Phaser.Game({
+  type: Phaser.AUTO,
+  pixelArt: true,
+  antialias: false,
+  roundPixels: true,
+  backgroundColor: '#0d1a0a',
+  parent: 'game-container',
+  /* no physics engine needed — we do pixel sampling ourselves */
+  scale: {
+    mode: Phaser.Scale.RESIZE,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
+  scene: PortoScene,
+});
+</script>
+</body>
+</html>
