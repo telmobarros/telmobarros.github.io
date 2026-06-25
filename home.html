@@ -19,15 +19,15 @@
 <nav class="navbar" id="navbar">
   <span class="nav-brand">TB.</span>
   <button class="nav-current" id="nav-current" aria-label="Current section">
-    <span class="nav-current-inner" id="nav-current-inner">Intro</span>
+    <span class="nav-current-inner" id="nav-current-inner">About</span>
   </button>
   <div class="nav-links" id="nav-links">
-    <a href="#intro">Intro</a>
-    <a href="#education">Education</a>
+    <a href="#about">About</a>
     <a href="#experience">Experience</a>
     <a href="#teaching">Teaching</a>
-    <a href="#publications">Publications</a>
+    <a href="#education">Education</a>
     <a href="#projects">Projects</a>
+    <a href="#publications">Publications</a>
     <a href="#skills">Skills</a>
   </div>
   <a href="index.html" class="nav-game-link">← Game</a>
@@ -104,8 +104,8 @@
      ============================================================ -->
 <main class="page-wrapper">
 
-  <!-- ======== INTRO / HERO ======== -->
-  <section id="intro" class="hero">
+  <!-- ======== ABOUT / HERO ======== -->
+  <section id="about" class="hero">
     <!-- Pixel avatar placeholder (inline SVG, no external file needed) -->
     <svg class="hero-pixel" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"
          aria-hidden="true" style="width:80px;height:80px;display:block;margin-bottom:1rem;image-rendering:pixelated;">
@@ -135,67 +135,15 @@
     </svg>
 
     <h1>Telmo Barros</h1>
-    <p class="subtitle">PhD Researcher · AI &amp; Optimisation · Porto, Portugal</p>
+    <p class="subtitle">PhD Researcher · AI &amp; Optimization · Porto, Portugal</p>
     <p class="tagline">
       I research intelligent routing systems and risk assessment at
       <a href="https://liacc.fe.up.pt/" target="_blank" rel="noopener">LIACC</a>,
-      University of Porto. My work sits at the intersection of combinatorial optimisation,
+      University of Porto. My work sits at the intersection of combinatorial optimization,
       AI planning, and real-world public-sector applications.
       I also teach AI and Machine Learning to engineering students.
     </p>
-    <a href="Resume.pdf" class="download-btn" download>⬇ Download Resume (PDF)</a>
-  </section>
-
-  <!-- ======== EDUCATION ======== -->
-  <section id="education" class="resume-section">
-    <div class="section-header">
-      <span class="section-icon">🎓</span>
-      <h2>Education</h2>
-    </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <div>
-          <div class="entry-title">PhD in Computer Science — Artificial Intelligence</div>
-          <div class="entry-org">Faculty of Sciences, University of Porto</div>
-        </div>
-        <span class="entry-date">Oct 2020 - Present</span>
-      </div>
-      <div class="entry-location">Porto, Portugal</div>
-      <ul>
-        <li>Research focus: realistic dynamic routing adaptation strategies and custom risk assessment frameworks.</li>
-        <li>Collaborated with Portuguese Public Administration entities on applied AI projects.</li>
-      </ul>
-    </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <div>
-          <div class="entry-title">Erasmus+ Programme</div>
-          <div class="entry-org">Sapienza University of Rome</div>
-        </div>
-        <span class="entry-date">Sep 2018 - Feb 2019</span>
-      </div>
-      <div class="entry-location">Rome, Italy</div>
-      <ul>
-        <li>Courses: Data Mining, Knowledge Representation &amp; Semantic Technologies, Machine Learning, Web Security &amp; Privacy.</li>
-      </ul>
-    </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <div>
-          <div class="entry-title">BSc/MSc in Informatics and Computing Engineering</div>
-          <div class="entry-org"><a href="https://fe.up.pt/" target="_blank" rel="noopener">Faculty of Engineering, University of Porto</a></div>
-        </div>
-        <span class="entry-date">Sep 2014 - Jul 2019</span>
-      </div>
-      <div class="entry-location">Porto, Portugal</div>
-      <ul>
-        <li>Final grade: <strong>16 / 20</strong>. Master's dissertation grade: <strong>18 / 20</strong>.</li>
-        <li>Participated in SPE 2016 (Engineering Week), exhibiting a game project built in C and Assembly with direct I/O device manipulation.</li>
-      </ul>
-    </div>
+    <a href="telmobarros_resume.pdf" class="download-btn" download>⬇ Download Resume (PDF)</a>
   </section>
 
   <!-- ======== EXPERIENCE ======== -->
@@ -246,7 +194,7 @@
       </div>
       <div class="entry-location">Porto, Portugal</div>
       <ul>
-        <li>Developed the optimal inspection route generation module for the IA.SAE project; implemented multiple algorithms to solve the underlying combinatorial optimisation problem.</li>
+        <li>Developed the optimal inspection route generation module for the IA.SAE project; implemented multiple algorithms to solve the underlying combinatorial optimization problem.</li>
         <li>Assisted with georeferencing and pre-processing of raw data provided by ASAE.</li>
       </ul>
     </div>
@@ -330,9 +278,230 @@
       <div class="entry-location">Porto, Portugal</div>
       <ul>
         <li>Provided close guidance to 4 MSc students throughout their dissertations, without holding the formal advisor role.</li>
-        <li>One thesis focused on route optimisation under the <a href="#proj-cigescop">CIGESCOP</a> project; three on NLP and complaint classification under <a href="#proj-ersai">ERS-IA</a>.</li>
+        <li>One thesis focused on route optimization under the <a href="#proj-cigescop">CIGESCOP</a> project; three on NLP and complaint classification under <a href="#proj-ersai">ERS-IA</a>.</li>
       </ul>
     </div>
+  </section>
+
+  <!-- ======== EDUCATION ======== -->
+  <section id="education" class="resume-section">
+    <div class="section-header">
+      <span class="section-icon">🎓</span>
+      <h2>Education</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <div>
+          <div class="entry-title">PhD in Computer Science — Artificial Intelligence</div>
+          <div class="entry-org">Faculty of Sciences, University of Porto</div>
+        </div>
+        <span class="entry-date">Oct 2020 - Present</span>
+      </div>
+      <div class="entry-location">Porto, Portugal</div>
+      <ul>
+        <li>Research focus: realistic dynamic routing adaptation strategies and custom risk assessment frameworks.</li>
+        <li>Collaborated with Portuguese Public Administration entities on applied AI projects.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <div>
+          <div class="entry-title">Erasmus+ Programme</div>
+          <div class="entry-org">Sapienza University of Rome</div>
+        </div>
+        <span class="entry-date">Sep 2018 - Feb 2019</span>
+      </div>
+      <div class="entry-location">Rome, Italy</div>
+      <ul>
+        <li>Courses: Data Mining, Knowledge Representation &amp; Semantic Technologies, Machine Learning, Web Security &amp; Privacy.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <div>
+          <div class="entry-title">BSc/MSc in Informatics and Computing Engineering</div>
+          <div class="entry-org"><a href="https://fe.up.pt/" target="_blank" rel="noopener">Faculty of Engineering, University of Porto</a></div>
+        </div>
+        <span class="entry-date">Sep 2014 - Jul 2019</span>
+      </div>
+      <div class="entry-location">Porto, Portugal</div>
+      <ul>
+        <li>Final grade: <strong>16 / 20</strong>. Master's dissertation grade: <strong>18 / 20</strong>.</li>
+        <li>Participated in SPE 2016 (Engineering Week), exhibiting a game project built in C and Assembly with direct I/O device manipulation.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======== PROJECTS ======== -->
+  <section id="projects" class="resume-section">
+    <div class="section-header">
+      <span class="section-icon">💻</span>
+      <h2>Projects</h2>
+    </div>
+
+    <div class="entry" id="proj-retaill">
+      <div class="entry-header">
+        <span class="entry-title">
+          <a href="https://liacc.fe.up.pt/liaccwp/projects/retaill/" target="_blank" rel="noopener">RETAILL</a>
+          <span style="font-weight:400;color:var(--text-muted)"> — AI in Retail Supply Chain Optimization</span>
+        </span>
+        <span class="entry-date">2024 - Present</span>
+      </div>
+      <div class="entry-location">
+        <a href="https://liacc.fe.up.pt" target="_blank" rel="noopener">LIACC · FEUP</a>
+        · EUREKA / ITEA · Portugal2030
+      </div>
+      <p>European consortium project (EUREKA ITEA-certified, co-funded by Portugal2030) targeting smart supply chain management for fresh produce — fruit, vegetables, and chilled goods. Develops logistics optimization, dynamic routing, surplus-product redistribution, advanced tracking and preservation monitoring, and lifecycle assessment tools, integrating data from multiple supply chain actors and environmental sources.</p>
+      <div>
+        <span class="tag">Backend</span>
+        <span class="tag">Routing</span>
+        <span class="tag">Optimization</span>
+      </div>
+    </div>
+
+    <div class="entry" id="proj-sama4">
+      <div class="entry-header">
+        <span class="entry-title">
+          <a href="https://www.ers.pt/pt/projetos/projetos-cofinanciados/supervisao-baseada-na-analise-de-informacao-e-avaliacao-de-risco/" target="_blank" rel="noopener">ERS SAMA4</a>
+          <span style="font-weight:400;color:var(--text-muted)"> — Risk-Based Healthcare Supervision</span>
+        </span>
+        <span class="entry-date">2022 - Present</span>
+      </div>
+      <div class="entry-location">
+        <a href="https://liacc.fe.up.pt" target="_blank" rel="noopener">LIACC · FEUP</a>, 
+        <a href="https://glinttglobal.com/" target="_blank" rel="noopener">GLINTT</a> &amp;
+        <a href="https://www.ers.pt" target="_blank" rel="noopener">ERS</a>
+        · Compete 2020 / ESF (POCI-05-5762-FSE-000389)
+      </div>
+      <p>Risk-based supervision model for ERS that replaces volume-based regulatory oversight with data-driven risk profiling. Healthcare providers are assessed across seven dimensions — access, quality and safety, economic transparency, market competition, user rights, user satisfaction, and provider-regulator relationships — using standardized performance data to enable targeted regulatory intervention. Piloted in February 2023 with facilities covered by Portugal's National Health Assessment System (SINAS).</p>
+      <div>
+        <span class="tag">Full-stack</span>
+        <span class="tag">Risk Modeling</span>
+        <span class="tag">Decision Support</span>
+      </div>
+    </div>
+
+    <div class="entry" id="proj-ersai">
+      <div class="entry-header">
+        <span class="entry-title">
+          <a href="https://liacc.fe.up.pt/liaccwp/projects/ers-projeto-de-inteligencia-artificial/" target="_blank" rel="noopener">ERS-IA</a>
+          <span style="font-weight:400;color:var(--text-muted)"> — AI for Healthcare Regulation</span>
+        </span>
+        <span class="entry-date">2020 - 2022</span>
+      </div>
+      <div class="entry-location">
+        <a href="https://liacc.fe.up.pt" target="_blank" rel="noopener">LIACC · FEUP</a> &amp;
+        <a href="https://www.ers.pt" target="_blank" rel="noopener">ERS</a>
+        · SAMA 2020 (POCI-05-5762-FSE-000205)
+      </div>
+      <p>AI system for ERS (Portugal's independent healthcare regulator) to process and triage citizen complaints at scale. Uses NLP for automated information extraction, binary classifiers (Random Forest, SVM) for complaint categorization, and fuzzy matching for near-duplicate detection — trained on approximately 374,000 digital complaints from 2018-2020. Generates risk signals to prioritize supervisory actions and integrates with ERS's existing complaint management platform.</p>
+      <div>
+        <span class="tag">Full-stack</span>
+        <span class="tag">Risk Modeling</span>
+        <span class="tag">Decision Support</span>
+        <span class="tag">ML</span>
+      </div>
+    </div>
+
+    <div class="entry" id="proj-cigescop">
+      <div class="entry-header">
+        <span class="entry-title">
+          <a href="https://liacc.fe.up.pt/liaccwp/projects/centro-inteligente-de-gestao-e-controlo-operacional-da-asae/" target="_blank" rel="noopener">CIGESCOP</a>
+          <span style="font-weight:400;color:var(--text-muted)"> — Intelligent Management &amp; Control Center</span>
+        </span>
+        <span class="entry-date">2021</span>
+      </div>
+      <div class="entry-location">
+        <a href="https://liacc.fe.up.pt" target="_blank" rel="noopener">LIACC · FEUP</a> &amp;
+        <a href="https://www.asae.gov.pt" target="_blank" rel="noopener">ASAE</a>
+        (POCI-05-5762-FSE-000215)
+        <a class="proj-link" href="https://noticias.up.pt/feup-cria-plataforma-de-apoio-a-decisao-da-asae-baseada-em-inteligencia-artificial/" target="_blank" rel="noopener">↗ FEUP News</a>
+      </div>
+      <p>Intelligent operational management and control center for ASAE, reengineering inspection workflows through AI and Data Science. Automates resource allocation, supports decision-making across operational units, and improves ASAE's interaction with citizens and businesses as part of Portugal's public administration digital transformation.</p>
+      <div>
+        <span class="tag">Full-stack</span>
+        <span class="tag">Route Optimization</span>
+        <span class="tag">Decision Support</span>
+      </div>
+    </div>
+
+    <div class="entry" id="proj-iasae">
+      <div class="entry-header">
+        <span class="entry-title">
+          <a href="https://liacc.fe.up.pt/liaccwp/projects/ia-sae-inteligencia-artificial-na-seguranca-alimentar-e-economica/" target="_blank" rel="noopener">IA.SAE</a>
+          <span style="font-weight:400;color:var(--text-muted)"> — Artificial Intelligence in Food &amp; Economic Security</span>
+        </span>
+        <span class="entry-date">2018 - 2020</span>
+      </div>
+      <div class="entry-location">
+        <a href="https://liacc.fe.up.pt" target="_blank" rel="noopener">LIACC · FEUP</a> &amp;
+        <a href="https://www.asae.gov.pt" target="_blank" rel="noopener">ASAE</a>
+        · Funded by FCT / INCoDe.2030
+      </div>
+      <p>AI system for ASAE (Portugal's food safety and economic authority) to optimize inspection targeting and resource allocation. Comprises five modules: intelligent risk matrix generation, consumer complaint analysis, sales-monitoring alerts, economic operator selection, and a geospatial decision-support interface for field operations.</p>
+      <div>
+        <span class="tag">Full-stack</span>
+        <span class="tag">Route Optimization</span>
+        <span class="tag">Data Preprocessing</span>
+      </div>
+    </div>
+
+    <p class="proj-group-label">Non-Research Projects</p>
+
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">Quero Ajudar.pt</span>
+        <span class="entry-date">2018</span>
+      </div>
+      <div class="entry-location">Hackathon · Porto</div>
+      <p>Social donation platform built in 48 hours at the Make Or Break 2018 hackathon. Simplifies nonprofit support by pooling all contributions and distributing them weekly. Each participating organization has its own page for both monetary and non-monetary needs, and can also receive direct donations.</p>
+      <div>
+        <span class="tag">Full-stack</span>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">
+          Rocha Leite
+          <a class="proj-link" href="https://rochaleitearq.com" target="_blank" rel="noopener">↗ rochaleitearq.com</a>
+        </span>
+      </div>
+      <div class="entry-location">Portfolio Website · Architecture Atelier</div>
+      <p>Full-stack portfolio website for an architecture atelier, showcasing their work and studio identity. Designed from scratch to reflect the studio's minimalist visual language.</p>
+      <div>
+        <span class="tag">Full-stack</span>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">dreamShare</span>
+      </div>
+      <div class="entry-location">Academic Project · University of Porto</div>
+      <p>Community-local donation platform for both monetary and material contributions. Inspired by GoFundMe and Kickstarter, but scoped to causes within the user's residential area to foster local solidarity and direct neighborhood engagement.</p>
+      <div>
+        <span class="tag">Full-stack</span>
+        <span class="tag">Curricular</span>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">Triptogo</span>
+      </div>
+      <div class="entry-location">Academic Project · University of Porto</div>
+      <p>Pokémon GO-inspired tourism gamification platform. Users explore local points of interest by completing serious-game challenges — quizzes, photo and video tasks, QR code scans, and open-answer questions. Includes a web admin panel for managing content and reviewing analytics. Responsible for the backend and database.</p>
+      <div>
+        <span class="tag">Backend</span>
+        <span class="tag">Database</span>
+        <span class="tag">Curricular</span>
+      </div>
+    </div>
+
   </section>
 
   <!-- ======== PUBLICATIONS ======== -->
@@ -385,175 +554,6 @@
     </div>
   </section>
 
-  <!-- ======== PROJECTS ======== -->
-  <section id="projects" class="resume-section">
-    <div class="section-header">
-      <span class="section-icon">💻</span>
-      <h2>Projects</h2>
-    </div>
-
-    <div class="entry" id="proj-retaill">
-      <div class="entry-header">
-        <span class="entry-title">
-          <a href="https://liacc.fe.up.pt/liaccwp/projects/retaill/" target="_blank" rel="noopener">RETAILL</a>
-          <span style="font-weight:400;color:var(--text-muted)"> — AI in Retail Supply Chain Optimisation</span>
-        </span>
-        <span class="entry-date">2024 - Present</span>
-      </div>
-      <div class="entry-location">
-        <a href="https://liacc.fe.up.pt" target="_blank" rel="noopener">LIACC · FEUP</a>
-        · EUREKA / ITEA · Portugal2030
-      </div>
-      <p>European consortium project (EUREKA ITEA-certified, co-funded by Portugal2030) targeting smart supply chain management for fresh produce — fruit, vegetables, and chilled goods. Develops logistics optimisation, dynamic routing, surplus-product redistribution, advanced tracking and preservation monitoring, and lifecycle assessment tools, integrating data from multiple supply chain actors and environmental sources.</p>
-      <div>
-        <span class="tag">Backend</span>
-        <span class="tag">Routing</span>
-        <span class="tag">Optimisation</span>
-      </div>
-    </div>
-
-    <div class="entry" id="proj-sama4">
-      <div class="entry-header">
-        <span class="entry-title">
-          <a href="https://www.ers.pt/pt/projetos/projetos-cofinanciados/supervisao-baseada-na-analise-de-informacao-e-avaliacao-de-risco/" target="_blank" rel="noopener">ERS SAMA4</a>
-          <span style="font-weight:400;color:var(--text-muted)"> — Risk-Based Healthcare Supervision</span>
-        </span>
-        <span class="entry-date">2022 - Present</span>
-      </div>
-      <div class="entry-location">
-        <a href="https://liacc.fe.up.pt" target="_blank" rel="noopener">LIACC · FEUP</a>, 
-        <a href="https://glinttglobal.com/" target="_blank" rel="noopener">GLINTT</a> &amp;
-        <a href="https://www.ers.pt" target="_blank" rel="noopener">ERS</a>
-        · Compete 2020 / ESF (POCI-05-5762-FSE-000389)
-      </div>
-      <p>Risk-based supervision model for ERS that replaces volume-based regulatory oversight with data-driven risk profiling. Healthcare providers are assessed across seven dimensions — access, quality and safety, economic transparency, market competition, user rights, user satisfaction, and provider-regulator relationships — using standardised performance data to enable targeted regulatory intervention. Piloted in February 2023 with facilities covered by Portugal's National Health Assessment System (SINAS).</p>
-      <div>
-        <span class="tag">Full-stack</span>
-        <span class="tag">Risk Modelling</span>
-        <span class="tag">Decision Support</span>
-      </div>
-    </div>
-
-    <div class="entry" id="proj-ersai">
-      <div class="entry-header">
-        <span class="entry-title">
-          <a href="https://liacc.fe.up.pt/liaccwp/projects/ers-projeto-de-inteligencia-artificial/" target="_blank" rel="noopener">ERS-IA</a>
-          <span style="font-weight:400;color:var(--text-muted)"> — AI for Healthcare Regulation</span>
-        </span>
-        <span class="entry-date">2020 - 2022</span>
-      </div>
-      <div class="entry-location">
-        <a href="https://liacc.fe.up.pt" target="_blank" rel="noopener">LIACC · FEUP</a> &amp;
-        <a href="https://www.ers.pt" target="_blank" rel="noopener">ERS</a>
-        · SAMA 2020 (POCI-05-5762-FSE-000205)
-      </div>
-      <p>AI system for ERS (Portugal's independent healthcare regulator) to process and triage citizen complaints at scale. Uses NLP for automated information extraction, binary classifiers (Random Forest, SVM) for complaint categorisation, and fuzzy matching for near-duplicate detection — trained on approximately 374,000 digital complaints from 2018-2020. Generates risk signals to prioritise supervisory actions and integrates with ERS's existing complaint management platform.</p>
-      <div>
-        <span class="tag">Full-stack</span>
-        <span class="tag">Risk Modelling</span>
-        <span class="tag">Decision Support</span>
-        <span class="tag">ML</span>
-      </div>
-    </div>
-
-    <div class="entry" id="proj-cigescop">
-      <div class="entry-header">
-        <span class="entry-title">
-          <a href="https://liacc.fe.up.pt/liaccwp/projects/centro-inteligente-de-gestao-e-controlo-operacional-da-asae/" target="_blank" rel="noopener">CIGESCOP</a>
-          <span style="font-weight:400;color:var(--text-muted)"> — Intelligent Management &amp; Control Center</span>
-        </span>
-        <span class="entry-date">2021</span>
-      </div>
-      <div class="entry-location">
-        <a href="https://liacc.fe.up.pt" target="_blank" rel="noopener">LIACC · FEUP</a> &amp;
-        <a href="https://www.asae.gov.pt" target="_blank" rel="noopener">ASAE</a>
-        (POCI-05-5762-FSE-000215)
-        <a class="proj-link" href="https://noticias.up.pt/feup-cria-plataforma-de-apoio-a-decisao-da-asae-baseada-em-inteligencia-artificial/" target="_blank" rel="noopener">↗ FEUP News</a>
-      </div>
-      <p>Intelligent operational management and control centre for ASAE, reengineering inspection workflows through AI and Data Science. Automates resource allocation, supports decision-making across operational units, and improves ASAE's interaction with citizens and businesses as part of Portugal's public administration digital transformation.</p>
-      <div>
-        <span class="tag">Full-stack</span>
-        <span class="tag">Route Optimisation</span>
-        <span class="tag">Decision Support</span>
-      </div>
-    </div>
-
-    <div class="entry" id="proj-iasae">
-      <div class="entry-header">
-        <span class="entry-title">
-          <a href="https://liacc.fe.up.pt/liaccwp/projects/ia-sae-inteligencia-artificial-na-seguranca-alimentar-e-economica/" target="_blank" rel="noopener">IA.SAE</a>
-          <span style="font-weight:400;color:var(--text-muted)"> — Artificial Intelligence in Food &amp; Economic Security</span>
-        </span>
-        <span class="entry-date">2018 - 2020</span>
-      </div>
-      <div class="entry-location">
-        <a href="https://liacc.fe.up.pt" target="_blank" rel="noopener">LIACC · FEUP</a> &amp;
-        <a href="https://www.asae.gov.pt" target="_blank" rel="noopener">ASAE</a>
-        · Funded by FCT / INCoDe.2030
-      </div>
-      <p>AI system for ASAE (Portugal's food safety and economic authority) to optimise inspection targeting and resource allocation. Comprises five modules: intelligent risk matrix generation, consumer complaint analysis, sales-monitoring alerts, economic operator selection, and a geospatial decision-support interface for field operations.</p>
-      <div>
-        <span class="tag">Full-stack</span>
-        <span class="tag">Route Optimisation</span>
-        <span class="tag">Data Preprocessing</span>
-      </div>
-    </div>
-
-    <p class="proj-group-label">Non-Research Projects</p>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">Quero Ajudar.pt</span>
-        <span class="entry-date">2018</span>
-      </div>
-      <div class="entry-location">Hackathon · Porto</div>
-      <p>Social donation platform built in 48 hours at the Make Or Break 2018 hackathon. Simplifies nonprofit support by pooling all contributions and distributing them weekly. Each participating organisation has its own page for both monetary and non-monetary needs, and can also receive direct donations.</p>
-      <div>
-        <span class="tag">Full-stack</span>
-      </div>
-    </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">
-          Rocha Leite
-          <a class="proj-link" href="https://rochaleitearq.com" target="_blank" rel="noopener">↗ rochaleitearq.com</a>
-        </span>
-      </div>
-      <div class="entry-location">Portfolio Website · Architecture Atelier</div>
-      <p>Full-stack portfolio website for an architecture atelier, showcasing their work and studio identity. Designed from scratch to reflect the studio's minimalist visual language.</p>
-      <div>
-        <span class="tag">Full-stack</span>
-      </div>
-    </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">dreamShare</span>
-      </div>
-      <div class="entry-location">Academic Project · University of Porto</div>
-      <p>Community-local donation platform for both monetary and material contributions. Inspired by GoFundMe and Kickstarter, but scoped to causes within the user's residential area to foster local solidarity and direct neighbourhood engagement.</p>
-      <div>
-        <span class="tag">Full-stack</span>
-        <span class="tag">Curricular</span>
-      </div>
-    </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">Triptogo</span>
-      </div>
-      <div class="entry-location">Academic Project · University of Porto</div>
-      <p>Pokémon GO-inspired tourism gamification platform. Users explore local points of interest by completing serious-game challenges — quizzes, photo and video tasks, QR code scans, and open-answer questions. Includes a web admin panel for managing content and reviewing analytics. Responsible for the backend and database.</p>
-      <div>
-        <span class="tag">Backend</span>
-        <span class="tag">Database</span>
-        <span class="tag">Curricular</span>
-      </div>
-    </div>
-
-  </section>
-
   <!-- ======== SKILLS ======== -->
   <section id="skills" class="resume-section">
     <div class="section-header">
@@ -580,7 +580,7 @@
       </div>
       <div class="skill-group">
         <h4>Other</h4>
-        <p>Programming contests (ONI, Google Hash Code, Make or Break, Codeflows) · Driving licence B &amp; A</p>
+        <p>Programming contests (ONI, Google Hash Code, Make or Break, Codeflows) · Driver's license B &amp; A</p>
       </div>
     </div>
   </section>
